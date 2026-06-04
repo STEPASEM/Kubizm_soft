@@ -24,7 +24,7 @@
                             <small class="text-muted">JPG, PNG до 5MB</small>
                             <input type="file" id="photo-input" name="photo" accept="image/*" style="display: none;" required>
                         </div>
-                        
+
                         <!-- Область предпросмотра -->
                         <div id="preview-area" class="text-center" style="display: {% if preview_image %}block{% else %}none{% endif %};">
                             <div class="border rounded bg-light p-3" style="min-height: 400px; display: flex; flex-direction: column; justify-content: center;">
@@ -38,7 +38,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary btn-lg w-100 mt-3" id="submit-btn" {% if not preview_image %}disabled{% endif %}>
                             <i class="fas fa-check-circle"></i> Проверить
                         </button>
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Правая часть - результат -->
         <div class="col-md-6 d-flex">
             <div class="card shadow-sm w-100">
@@ -54,7 +54,7 @@
                     <h3 class="card-title text-center mb-4">
                         <i class="fas fa-search text-primary"></i> Результат проверки
                     </h3>
-                    
+
                     <div class="flex-grow-1">
                         {% if result %}
                             {% if result.error %}
@@ -65,17 +65,17 @@
                             {% else %}
                                 <div class="text-center">
                                     <i class="fas fa-chart-pie fa-3x text-success mb-3"></i>
-                                    
+
                                     <div class="alert alert-primary">
                                         <strong>Стиль:</strong> {{ result.class }}
                                     </div>
-                                    
+
                                     <div class="alert alert-success">
                                         <strong>Уверенность:</strong> {{ result.confidence }}%
                                     </div>
-                                    
+
                                     <hr>
-                                    
+
                                     <h5>Параметры кубизма:</h5>
                                     <div class="list-group mt-3">
                                         <div class="list-group-item d-flex justify-content-between align-items-center">
@@ -106,6 +106,44 @@
             </div>
         </div>
     </div>
+    {% if examples %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">
+                        <i class="fas fa-palette text-primary"></i> Примеры {{ result.class }}
+                    </h3>
+                    <p class="text-center text-muted mb-4">Произведения в этом же стиле</p>
+                    
+                    <div class="row g-4">
+                        {% for artwork in examples %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                {% if artwork.image_url %}
+                                <img src="{{ artwork.image_url }}" class="card-img-top" alt="{{ artwork.title }}" style="height: 250px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/300x250?text=Изображение+не+доступно'">
+                                {% else %}
+                                <div class="bg-light text-center py-5" style="height: 250px;">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ artwork.title }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ artwork.artist }}, {{ artwork.year }}</h6>
+                                    <p class="card-text small">{{ artwork.description|truncatewords:20 }}</p>
+                                    <a href="{{ artwork.source_url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-external-link-alt"></i> Узнать больше
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <script>
@@ -117,12 +155,12 @@
     const submitBtn = document.getElementById('submit-btn');
     const changePhotoBtn = document.getElementById('change-photo-btn');
     const resultContainer = document.getElementById('result-container');
-    
+
     // Функция открытия проводника
     function openFileDialog() {
         photoInput.click();
     }
-    
+
     // Клик по области загрузки
     if (uploadArea) {
         uploadArea.addEventListener('click', function(e) {
@@ -130,7 +168,7 @@
             openFileDialog();
         });
     }
-    
+
     // Выбор файла
     if (photoInput) {
         photoInput.addEventListener('change', function(e) {
@@ -147,13 +185,13 @@
             }
         });
     }
-    
+
     // Кнопка "Выбрать другое фото" — открывает проводник
     if (changePhotoBtn) {
         changePhotoBtn.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Просто открываем проводник для выбора нового файла
             photoInput.click();
         });
