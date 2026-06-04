@@ -10,18 +10,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
                         <i class="fas fa-home me-1"></i>Главная
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#about">
+                    <a class="nav-link {% if 'o-we' in request.path %}active{% endif %}" href="/o-we/">
                         <i class="fas fa-info-circle me-1"></i>О нас
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#contacts">
-                        <i class="fas fa-envelope me-1"></i>Контакты
                     </a>
                 </li>
             </ul>
